@@ -38,7 +38,7 @@ public class PlaceMultipleObjectsOnPlane : MonoBehaviour
     {
         m_RaycastManager = GetComponent<ARRaycastManager>();
     }
-
+    
     void Update()
     {
         if (Input.touchCount > 0)
