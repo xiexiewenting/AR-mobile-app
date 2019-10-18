@@ -31,8 +31,6 @@ public class CubesOnPlanes : MonoBehaviour
 
 
     List<GameObject> _spawnList = new List<GameObject>();
-    //List<float> _cubePlacementTimes = new List<float>();
-    //List<Vector3> _cubePositions = new List<Vector3>();
 
     void Awake()
     {
@@ -60,7 +58,7 @@ public class CubesOnPlanes : MonoBehaviour
                     _spawnedObject = Instantiate(m_cubePrefab, hitPose.position, hitPose.rotation);
                     _spawnList.Add(_spawnedObject);
 
-                    _lrs.addCube(Time.time, hitPose.position);
+                    _lrs.AddCube(Time.time, hitPose.position);
 
 
                     if (_onPlacedObject != null)

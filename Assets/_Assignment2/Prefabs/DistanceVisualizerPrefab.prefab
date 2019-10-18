@@ -138,3 +138,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcca3b85eec6049c6892bd21334126d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMeshPrefab: {fileID: 4573379852039611265, guid: b79fe1f4cf77c491b91e672a89c573b4,
+    type: 3}

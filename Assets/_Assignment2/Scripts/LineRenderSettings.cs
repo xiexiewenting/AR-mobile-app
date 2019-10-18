@@ -5,10 +5,14 @@ using TMPro;
 
 public class LineRenderSettings : MonoBehaviour
 {
+    public GameObject _textMeshPrefab;
+
     private LineRenderer _lr;
     private List<float> _cubePlacementTimes = new List<float>();
     private List<Vector3> _cubePositions = new List<Vector3>();
-    private List<bool> _finishedDrawing = new List<bool>();
+    private List<bool> _doneLerpingArray = new List<bool>();
+    private List<bool> _doneDistTextArray = new List<bool>();
+    private List<GameObject> _distTextArray = new List<GameObject>();
 
 
     private float _drawSpeed = 1.0f;
@@ -17,10 +21,14 @@ public class LineRenderSettings : MonoBehaviour
     void Start()
     {
         _lr = GetComponent<LineRenderer>();
-        _lr.startWidth = 0.02f;
-        _lr.endWidth = 0.02f;
-        _lr.startColor = Color.blue;
-        _lr.endColor = Color.blue;
+        _lr.material = new Material(Shader.Find("Sprites/Default"))
+        {
+            color = Color.blue
+        };
+        _lr.startWidth = 0.01f;
+        _lr.endWidth = 0.01f;
+        //_lr.startWidth = 0.2f;
+
         _lr.useWorldSpace = true;
         _lr.positionCount = 0;
 
@@ -38,17 +46,14 @@ public class LineRenderSettings : MonoBehaviour
             index++;
             if (index < cubeTotal)
             {
-                lerpLine(index);
-                //Debug.Log("index: " + index + ", cubetotal: " + cubeTotal);
+                LerpLineSegment(index);
             }
         }
 
-        _lr.startWidth = 0.02f;
-        _lr.endWidth = 0.02f;
-
+        UpdateDistText();
     }
 
-    public void addCube(float placementTime, Vector3 placementPosition)
+    public void AddCube(float placementTime, Vector3 placementPosition)
     {
         _cubePlacementTimes.Add(placementTime); // time when cube was placed 
         _cubePositions.Add(placementPosition); // position where cube was placed
@@ -57,19 +62,22 @@ public class LineRenderSettings : MonoBehaviour
         //setting vertex of the added cube 
         int cubeIndex = _cubePositions.Count - 1;
         _lr.positionCount = _cubePositions.Count; // increasing vertex count
+
         if (cubeIndex == 0)
         {
             _lr.SetPosition(cubeIndex, _cubePositions[cubeIndex]);
+            _doneLerpingArray.Add(true);
         }
         else // we can finally set the next position of the next point 
         {
             _lr.SetPosition(cubeIndex, _lr.GetPosition(cubeIndex - 1));
+            _doneLerpingArray.Add(false);
         }
 
-        Debug.Log("Total points in LR: " + (cubeIndex + 1));
+        _doneDistTextArray.Add(false);
     }
 
-    private void lerpLine(int cubeIndex)
+    private void LerpLineSegment(int cubeIndex)
     {
         Vector3 currentPosition = _lr.GetPosition(cubeIndex);
         Vector3 finalEnd = _cubePositions[cubeIndex];
@@ -86,39 +94,37 @@ public class LineRenderSettings : MonoBehaviour
 
             _lr.SetPosition(cubeIndex, updatedEnd);
         }
+        else
+        {
+            _doneLerpingArray[cubeIndex] = true;
+        }
 
     }
 
 
+    private void UpdateDistText()
+    {
+        for (int i = 1; i < _cubePositions.Count; i++)
+        {
+            if (_doneLerpingArray[i] && (_doneDistTextArray[i-1] == false))
+            {
+                _doneDistTextArray[i - 1] = true;
+                CreateDistText(_cubePositions[i - 1], _cubePositions[i]);
+            }
+        }
+    }
 
+    private void CreateDistText(Vector3 position1, Vector3 position2)
+    {
+        float deltaDistance = Vector3.Distance(position1, position2);
+        Vector3 midPoint = (position1 + position2) / 2;
 
+        GameObject textMeshObject = Instantiate(_textMeshPrefab, midPoint, Quaternion.identity);
+        _distTextArray.Add(textMeshObject);
+        TextMesh distText = textMeshObject.GetComponent<TextMesh>();
 
-
-
-
-
-
-
-
-
-
-    //------------------------------------------------DEBUGGING METHOD 
-    //public void addPoints(List<Vector3> vertices)
-    //{
-    //    Debug.Log("-------------------------------");
-    //    Debug.Log("!!!!!! cubeIndex: " + vertices.Count);
-
-    //    _lr.positionCount = vertices.Count;
-    //    _lr.SetPositions(vertices.ToArray());
-
-    //    Vector3[] vertexPositions = new Vector3[vertices.Count];
-    //    _lr.GetPositions(vertexPositions);
-    //    for (int i = 0; i < (vertices.Count); i++)
-    //    {
-    //        Debug.Log("!!!!!! " + vertices.Count + ": Index at " + i + " currently is " + vertexPositions[i]);
-    //    }
-    //    Debug.Log("-------------------------------");
-
-       
-    //}
+        distText.text = deltaDistance.ToString();
+        distText.characterSize = 0.01f; //0.1f is still too big lmao 
+        distText.color = Color.green;
+    }
 } 

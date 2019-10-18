@@ -56,9 +56,9 @@ public class Debugger : MonoBehaviour
             totalClicks++;
 
             //Vector3 point = Input.mousePosition;
-            Vector3 newPosition = calculatePosition();
+            Vector3 newPosition = CalculatePosition();
             //spawnedObject = Instantiate(m_cubePrefab, newPosition, Quaternion.identity);
-            _lrs.addCube(Time.time, newPosition);
+            _lrs.AddCube(Time.time, newPosition);
             Debug.Log(totalClicks + ": " + newPosition);
 
             _cubePositions.Add(newPosition);
@@ -68,7 +68,7 @@ public class Debugger : MonoBehaviour
         }
     }
 
-    Vector3 calculatePosition()
+    Vector3 CalculatePosition()
     {
         return (new Vector3(0.0f + totalClicks * 2.0f, 0.0f , 0.0f ));
     }
