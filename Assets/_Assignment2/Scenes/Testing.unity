@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 476d904a741de4547ae1bcd774a7aaeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_cubePrefab: {fileID: 3658213177053645780, guid: 84b10894b971f471f9684d3625a43f50,
+  m_cubePrefab: {fileID: 6556453788470347115, guid: ebbe5accc5c7e46a6941ea0faf5f0e53,
     type: 3}
   _distanceVisualizerPrefab: {fileID: 8139606771082059775, guid: 1b043c624c5334101a9c6ba5aa65de99,
     type: 3}

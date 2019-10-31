@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class cubeGameObject : MonoBehaviour
+public class Debugger_Cube : MonoBehaviour
 {
 
     // Start is called before the first frame update
@@ -10,7 +10,7 @@ public class cubeGameObject : MonoBehaviour
     {
         gameObject.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Sprites/Default"))
         {
-            color = Color.blue
+            color = Color.magenta
         };
     }
 

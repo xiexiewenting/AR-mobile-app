@@ -11,6 +11,7 @@ public class ScaleController : MonoBehaviour
     [SerializeField]
     [Tooltip("The slider used to control the scale factor.")]
     Slider m_Slider;
+    ARSessionOrigin m_SessionOrigin;
 
     /// <summary>
     /// The slider used to control the scale factor.
@@ -100,5 +101,5 @@ public class ScaleController : MonoBehaviour
             text.text = "Scale: " + scale;
     }
 
-    ARSessionOrigin m_SessionOrigin;
+    
 }

@@ -19,16 +19,18 @@ public class Debugger : MonoBehaviour
     }
 
 
-    public GameObject spawnedObject { get; private set; }
+    public GameObject _spawnedObject { get; private set; }
     public GameObject _distanceVisualizerPrefab;
-    //private GameObject _distanceVisualizer;
+
 
     List<Vector3> _cubePositions = new List<Vector3>();
+    List<GameObject> _spawnList = new List<GameObject>();
 
 
     private GameObject _dvInstance;
     private LineRenderSettings _lrs;
-    LineRenderer l;
+    private LineRenderer _l;
+
 
     int totalClicks;
 
@@ -36,16 +38,17 @@ public class Debugger : MonoBehaviour
     void Awake()
     {
         _dvInstance = Instantiate(_distanceVisualizerPrefab);
-        l = _dvInstance.GetComponent<LineRenderer>();
         _lrs = _dvInstance.GetComponent<LineRenderSettings>();
-
+        _l = _dvInstance.GetComponent<LineRenderer>();
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        _l.startWidth = 0.1f;
         WasMouseClicked();
+        IsUndoNeeded();
 
     }
 
@@ -54,17 +57,16 @@ public class Debugger : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             totalClicks++;
-
             //Vector3 point = Input.mousePosition;
-            Vector3 newPosition = CalculatePosition();
-            //spawnedObject = Instantiate(m_cubePrefab, newPosition, Quaternion.identity);
-            _lrs.AddCube(Time.time, newPosition);
-            Debug.Log(totalClicks + ": " + newPosition);
+            AddCube();
 
-            _cubePositions.Add(newPosition);
+        }
+    }
 
-
-
+    void IsUndoNeeded()
+    {
+        if (Input.GetKeyDown("space")) {
+            Undo();
         }
     }
 
@@ -73,5 +75,42 @@ public class Debugger : MonoBehaviour
         return (new Vector3(0.0f + totalClicks * 2.0f, 0.0f , 0.0f ));
     }
 
+
+    /* AddCube():
+ * (1) instantiates a cube and adds it to the list
+ * (2) tells DistanceVisualizer to AddCube()
+ */
+    void AddCube() // add a cube
+    {
+        Vector3 newPosition = CalculatePosition();
+        _spawnedObject = Instantiate(m_cubePrefab, newPosition, Quaternion.identity);
+        _spawnList.Add(_spawnedObject);
+
+        _lrs.AddCube(newPosition);
+        Debug.Log(totalClicks + ": " + newPosition);
+
+        //if (_onPlacedObject != null)
+        //{
+        //    _onPlacedObject();
+        //}
+    }
+
+    /* Undo():
+     * if there are still cubes in the scene 
+     * (1) removes the last-created cube from the list and destroys it
+     * (2) tells DistanceVisualizer to Undo()
+     */
+    public void Undo()
+    {
+        if (_spawnList.Count > 0)
+        { // if there are no cubes, nothing happens
+            GameObject removedCube = _spawnList[_spawnList.Count - 1];
+            _spawnList.RemoveAt(_spawnList.Count - 1);
+
+            Destroy(removedCube);
+            _lrs.Undo();
+        }
+
+    }
 
 }

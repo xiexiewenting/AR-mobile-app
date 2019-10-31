@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8139606771082059775
+--- !u!1 &5579713437104757764
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,37 +8,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8139606771082059713}
-  - component: {fileID: 8139606771082059774}
-  - component: {fileID: -627281554651507492}
+  - component: {fileID: 3603390425374999567}
+  - component: {fileID: 2747680511361956450}
+  - component: {fileID: -6410216904652585339}
   m_Layer: 0
-  m_Name: DistanceVisualizerPrefab
+  m_Name: BezierLineRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8139606771082059713
+--- !u!4 &3603390425374999567
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8139606771082059775}
+  m_GameObject: {fileID: 5579713437104757764}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 728.2927, y: 101.77826, z: 312.0965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &8139606771082059774
+--- !u!120 &2747680511361956450
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8139606771082059775}
+  m_GameObject: {fileID: 5579713437104757764}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -70,7 +70,9 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions: []
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -126,18 +128,15 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &-627281554651507492
+--- !u!114 &-6410216904652585339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8139606771082059775}
+  m_GameObject: {fileID: 5579713437104757764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcca3b85eec6049c6892bd21334126d4, type: 3}
+  m_Script: {fileID: 11500000, guid: af89672179a024650a42aa40be427913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textMeshPrefab: {fileID: 4573379852039611265, guid: b79fe1f4cf77c491b91e672a89c573b4,
-    type: 3}
-  _distTextArray: []

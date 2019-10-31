@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LineRenderSettings : MonoBehaviour
-    // SAME THING AS CURRENT LineRenderSettings EXCEPT WITH THE DEBUG LINES
+public class LRS_v4 : MonoBehaviour
 {
     /* necessary GameObjects */
     public GameObject _textMeshPrefab;
@@ -63,35 +62,43 @@ public class LineRenderSettings : MonoBehaviour
     {
         if (_lr.positionCount < (cubeIndex + 1)) // if vertex not placed for the cube 
         {
+            Debug.Log("lr.vertex was not placed for cube index " + cubeIndex);
             if (_doneLerpingArray[cubeIndex - 1])//and prev cube is done lerping 
             {
+                Debug.Log("going to add a lr.vertex for cube index " + cubeIndex);
                 _lr.positionCount += 1; // (A) increasing vertex count 
                 _lr.SetPosition(cubeIndex, _lr.GetPosition(cubeIndex - 1)); // (A) setting lr.vertex
                 _lerpStartTimes.Add(Time.time); // (C) setting placement time
+                Debug.Log("lr.vertex is placed for cube index " + cubeIndex);
             }
-
-            return;
         }
-
-        Vector3 currentPosition = _lr.GetPosition(cubeIndex);
-        Vector3 finalEnd = _cubePositions[cubeIndex];
-
-        if (currentPosition == finalEnd) // we are done lerping this cubeIndex 
+        else
         {
-            _doneLerpingArray[cubeIndex] = true;
-            return; 
+            //Debug.Log("_lr has " + _lr.positionCount + " cubes");
+            //Debug.Log("checking the current cubeIndex " + cubeIndex);
+            Vector3 currentPosition = _lr.GetPosition(cubeIndex);
+            Vector3 finalEnd = _cubePositions[cubeIndex];
+
+            if (currentPosition != finalEnd) //not done lerping yet 
+            {
+                //Debug.Log("cubeIndex " + cubeIndex + "needs lerping");
+                Vector3 prevPoint = _cubePositions[cubeIndex - 1];
+
+                // calculating the line lerp 
+                float distCovered = (Time.time - _lerpStartTimes[cubeIndex]) * _drawSpeed;
+                float journeyLength = Vector3.Distance(prevPoint, finalEnd);
+                float fractionOfJourney = distCovered / journeyLength;
+                Vector3 updatedEnd = Vector3.Lerp(prevPoint, finalEnd, fractionOfJourney);
+                _lr.SetPosition(cubeIndex, updatedEnd);
+                //Debug.Log("cubeIndex " + cubeIndex + " has its position updated!");
+
+            }
+            else // we are done lerping this cubeIndex 
+            {
+                _doneLerpingArray[cubeIndex] = true;
+                //Debug.Log("cubeIndex " + cubeIndex + "needs no lerping");
+            }
         }
-
-        //not done lerping yet 
-        Vector3 prevPoint = _cubePositions[cubeIndex - 1];
-
-        // calculating the line lerp 
-        float distCovered = (Time.time - _lerpStartTimes[cubeIndex]) * _drawSpeed;
-        float journeyLength = Vector3.Distance(prevPoint, finalEnd);
-        float fractionOfJourney = distCovered / journeyLength;
-        Vector3 updatedEnd = Vector3.Lerp(prevPoint, finalEnd, fractionOfJourney);
-        _lr.SetPosition(cubeIndex, updatedEnd);
-
         
     }
 
@@ -139,7 +146,7 @@ public class LineRenderSettings : MonoBehaviour
     /* AddCube():
      * Adds a cube (called by SceneController) 
      */
-    public void AddCube(Vector3 placementPosition)
+    public void AddCube(float placementTime, Vector3 placementPosition)
     {
         _cubePositions.Add(placementPosition); // (B) position where cube was placed
 
@@ -152,13 +159,12 @@ public class LineRenderSettings : MonoBehaviour
             _lerpStartTimes.Add(Time.time); // (C) time when cube was placed 
             _doneLerpingArray.Add(true); // (D) no need to lerp
             // no need for (E) distText 
-            return;
         }
-        
-        // we can finally set the next position of the next point 
-        _doneLerpingArray.Add(false); // (D) we need to lerp 
-        _doneDistTextArray.Add(false); // (E) distText not created yet 
-    
+        else // we can finally set the next position of the next point 
+        {
+            _doneLerpingArray.Add(false); // (D) we need to lerp 
+            _doneDistTextArray.Add(false); // (E) distText not created yet 
+        }
     }
 
 
@@ -168,16 +174,20 @@ public class LineRenderSettings : MonoBehaviour
      */
     public void Undo()
     {
+        Debug.Log("------------------------------------------------");
         int total_cubes = _cubePositions.Count;
+        Debug.Log("Undo: there are "+total_cubes+", "+_lr.positionCount+" vertices, and "+_distTextArray.Count+" banners");
         _cubePositions.RemoveAt(total_cubes - 1); // remove (B)
         _doneLerpingArray.RemoveAt(_doneLerpingArray.Count - 1); // remove (D)
         if (_lr.positionCount == total_cubes) // if a lr.vertex existed for the cube 
         {
+            Debug.Log("deleting a lr.vertex");
             _lr.positionCount -= 1; // remove (A)
             _lerpStartTimes.RemoveAt(total_cubes - 1); // remove (C)
 
             if ((_distTextArray.Count > 0))
             { // one fewer DistText than cubes (since banner exists for pairs of cubes)
+                Debug.Log("a banner exists between the last two lr.vertices");
                 if (_doneDistTextArray[_doneDistTextArray.Count - 1])
                 { // If DistText had been created for the cube, destroy the cube  
 
@@ -185,21 +195,13 @@ public class LineRenderSettings : MonoBehaviour
                     _distTextArray.RemoveAt(_distTextArray.Count - 1); // remove (F)
 
                     Destroy(deletedDistText);
+                    Debug.Log("removing a banner");
                 }
                 // regardless, remove the boolean 
                 _doneDistTextArray.RemoveAt(_doneDistTextArray.Count - 1); // remove (E) 
             }
         }
-    }
-
-    public void DestroyDistText()
-    {
-        while (_distTextArray.Count > 0)
-        {
-            GameObject removedDistText = _distTextArray[0];
-            _distTextArray.RemoveAt(0);
-            Destroy(removedDistText);
-         }
+        Debug.Log("------------------------------------------------");
     }
 
 }

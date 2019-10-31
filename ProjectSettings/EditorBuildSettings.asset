@@ -71,9 +71,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/ARFoundationSamples/Scenes/ReferencePoints.unity
     guid: 5cba9114a192a46a7aef31da62316e39
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Assignment2/Scenes/Part1.unity
     guid: 3c93c5d94060c408083b251912b11446
+  - enabled: 1
+    path: Assets/_Assignment2/Scenes/Part2.unity
+    guid: 9f3642278a77145a4b7ae2d81ca59f1d
   m_configObjects:
     com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: 2d5fb8e61571b4e3897f221189089fd6,
       type: 2}
