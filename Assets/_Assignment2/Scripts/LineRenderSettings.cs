@@ -69,7 +69,6 @@ public class LineRenderSettings : MonoBehaviour
                 _lr.SetPosition(cubeIndex, _lr.GetPosition(cubeIndex - 1)); // (A) setting lr.vertex
                 _lerpStartTimes.Add(Time.time); // (C) setting placement time
             }
-
             return;
         }
 
@@ -81,7 +80,6 @@ public class LineRenderSettings : MonoBehaviour
             _doneLerpingArray[cubeIndex] = true;
             return; 
         }
-
         //not done lerping yet 
         Vector3 prevPoint = _cubePositions[cubeIndex - 1];
 
@@ -91,29 +89,25 @@ public class LineRenderSettings : MonoBehaviour
         float fractionOfJourney = distCovered / journeyLength;
         Vector3 updatedEnd = Vector3.Lerp(prevPoint, finalEnd, fractionOfJourney);
         _lr.SetPosition(cubeIndex, updatedEnd);
-
-        
     }
-
 
     /* UpdateDistText(): 
      * checks if a DistText needs to be created 
      */
     private void UpdateDistText()
     {
-        if (_cubePositions.Count > 1)
-        { // need at least 2 cubes to make a distanceText
-            for (int i = 1; i < _cubePositions.Count; i++)
-            {
-                if (_doneLerpingArray[i] && (_doneDistTextArray[i - 1] == false))
-                // (1) the line segment is done lerping
-                // (2) the distanceText doesn't exist yet (always 1 less than # of cubes) 
-                // >> create the distance Text 
-                {
-                    _doneDistTextArray[i - 1] = true; // (E) updating that distText is created 
-                    CreateDistText(_cubePositions[i - 1], _cubePositions[i]); // (F) create distText 
-                }
-            }
+        if (_cubePositions.Count <= 1) { return; }   
+         // need at least 2 cubes to make a distanceText
+        
+        for (int i = 1; i < _cubePositions.Count; i++)
+        {
+            if (_doneLerpingArray[i] == false) { continue; }
+            if (_doneDistTextArray[i-1]) { continue; }
+            // (1) the line segment is done lerping
+            // (2) the distanceText doesn't exist yet (always 1 less than # of cubes) 
+
+            _doneDistTextArray[i - 1] = true; // (E) updating that distText is created 
+            CreateDistText(_cubePositions[i - 1], _cubePositions[i]); // (F) create distText 
         }
     }
 
@@ -136,8 +130,8 @@ public class LineRenderSettings : MonoBehaviour
     }
 
 
-    /* AddCube():
-     * Adds a cube (called by SceneController) 
+    /* *****
+     * BETTER ADDCUBE METHOD !!!! 
      */
     public void AddCube(Vector3 placementPosition)
     {
@@ -162,8 +156,9 @@ public class LineRenderSettings : MonoBehaviour
     }
 
 
-
-    /* Undo():
+    /* ********* 
+     * BETTER UNDO METHOD !!!!! 
+     * Undo():
      * removes last placed element! 
      */
     public void Undo()
@@ -171,25 +166,24 @@ public class LineRenderSettings : MonoBehaviour
         int total_cubes = _cubePositions.Count;
         _cubePositions.RemoveAt(total_cubes - 1); // remove (B)
         _doneLerpingArray.RemoveAt(_doneLerpingArray.Count - 1); // remove (D)
-        if (_lr.positionCount == total_cubes) // if a lr.vertex existed for the cube 
-        {
-            _lr.positionCount -= 1; // remove (A)
-            _lerpStartTimes.RemoveAt(total_cubes - 1); // remove (C)
 
-            if ((_distTextArray.Count > 0))
-            { // one fewer DistText than cubes (since banner exists for pairs of cubes)
-                if (_doneDistTextArray[_doneDistTextArray.Count - 1])
-                { // If DistText had been created for the cube, destroy the cube  
+        if (_lr.positionCount != total_cubes) { return; } // if a lr.vertex existed for the cube 
+        
+        _lr.positionCount -= 1; // remove (A)
+        _lerpStartTimes.RemoveAt(total_cubes - 1); // remove (C)
 
-                    GameObject deletedDistText = _distTextArray[_distTextArray.Count - 1];
-                    _distTextArray.RemoveAt(_distTextArray.Count - 1); // remove (F)
+        if (_distTextArray.Count <= 0) { return; }
+         // one fewer DistText than cubes (since banner exists for pairs of cubes)
 
-                    Destroy(deletedDistText);
-                }
-                // regardless, remove the boolean 
-                _doneDistTextArray.RemoveAt(_doneDistTextArray.Count - 1); // remove (E) 
-            }
+        if (_doneDistTextArray[_doneDistTextArray.Count - 1])
+        { // If DistText had been created for the cube, destroy the cube  
+
+            GameObject deletedDistText = _distTextArray[_distTextArray.Count - 1];
+            _distTextArray.RemoveAt(_distTextArray.Count - 1); // remove (F)
+            Destroy(deletedDistText);
         }
+        // regardless, remove the boolean 
+        _doneDistTextArray.RemoveAt(_doneDistTextArray.Count - 1); // remove (E) 
     }
 
     public void DestroyDistText()

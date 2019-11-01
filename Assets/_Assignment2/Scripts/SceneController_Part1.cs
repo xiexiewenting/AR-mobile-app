@@ -59,24 +59,18 @@ public class SceneController_Part1 : MonoBehaviour
      */
     void TouchInteraction() 
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount <= 0) { return; }
+
+        Touch touch = Input.GetTouch(0);
+
+        if (touch.phase != TouchPhase.Began) { return; }
+
+        if (EventSystem.current.IsPointerOverGameObject(touch.fingerId)) { return; }
+
+        if (m_RaycastManager.Raycast(touch.position, _s_Hits, TrackableType.PlaneWithinPolygon))
         {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                if (EventSystem.current.IsPointerOverGameObject(touch.fingerId))
-                {
-                    return;
-                    //Do nothing because UI button has been touched 
-                }
-
-                if (m_RaycastManager.Raycast(touch.position, _s_Hits, TrackableType.PlaneWithinPolygon))
-                {
-                    Pose hitPose = _s_Hits[0].pose;
-                    AddCube(hitPose.position, hitPose.rotation);
-                }
-            }
+            Pose hitPose = _s_Hits[0].pose;
+            AddCube(hitPose.position, hitPose.rotation);
         }
     }
 
