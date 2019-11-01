@@ -39,7 +39,7 @@ public class SceneController_Part2 : MonoBehaviour
     public GameObject _bezierCube { get; private set; } // the  ube that is being pulled around 
 
     float _distanceFromCamera = 1.0f;
-    Vector3 _cubeVelocity = Vector3.zero;
+    Vector3 _cubeVelocity = new Vector3(0.1f, 0.1f, 0.1f);
     float _smoothTime = 0.4F;
 
     /* tracking the created cubes */
@@ -59,7 +59,7 @@ public class SceneController_Part2 : MonoBehaviour
         _bezierScript = _bezierInstance.GetComponent<BezierLineSetting>();
 
 
-        _bezierCube = Instantiate(m_cubePrefab, new Vector3(0, 1, 2), Quaternion.identity);
+        _bezierCube = Instantiate(m_cubePrefab, Vector3.zero, Quaternion.identity);
         _shadow = Instantiate(_shadowPrefab);
 
     }
@@ -79,15 +79,18 @@ public class SceneController_Part2 : MonoBehaviour
     void BezierLineUpdate()
     {
         Vector3 camDown = -_mainCamera.transform.up;
+        Vector3 camVector = (_mainCamera.transform.forward - _mainCamera.transform.up)/2.0f;
         Vector3 cubePosition = _bezierCube.transform.position;
-        _bezierScript.BezierLineUpdate(camDown, _cubeVelocity, cubePosition);
+        _bezierScript.BezierLineUpdate(camVector, _cubeVelocity, cubePosition);
+        //_bezierScript.TestLineUpdate(camVector, cubePosition);
     }
 
     void BezierCubeUpdate()
     {
-        Transform camTransform = _mainCamera.transform;
         Vector3 currentPosition = _bezierCube.transform.position;
-        Vector3 resultingPosition = camTransform.position + camTransform.forward * _distanceFromCamera;
+        Vector3 camPosition = _mainCamera.transform.position;
+        Vector3 offset = _mainCamera.transform.forward * _distanceFromCamera;// + _mainCamera.transform.up * ;
+        Vector3 resultingPosition = camPosition + offset;
   
         _bezierCube.transform.position = Vector3.SmoothDamp(currentPosition, 
             resultingPosition, ref _cubeVelocity, _smoothTime);
@@ -109,7 +112,6 @@ public class SceneController_Part2 : MonoBehaviour
 
     public void PlaceCube() // add a cube
     {
-
         Debug.Log("place cube was called, there are " + _spawnList.Count+ " cubes in the scene");
         _spawnedObject = Instantiate(m_cubePrefab, _bezierCube.transform.position, _bezierCube.transform.rotation);
         _spawnList.Add(_spawnedObject);
@@ -139,7 +141,6 @@ public class SceneController_Part2 : MonoBehaviour
             Destroy(removedCube);
             _lineRendererScript.Undo();
         }
-
     }
 
 
