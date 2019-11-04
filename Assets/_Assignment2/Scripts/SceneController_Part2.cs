@@ -10,16 +10,8 @@ using UnityEngine.SceneManagement;
 public class SceneController_Part2 : MonoBehaviour
 {
     /* necessary GameObjects */
-    public GameObject _ARSessionOrigin;
-    public GameObject _distanceVisualizerPrefab;
-    public GameObject _bezierVisualizerPrefab;
-
+    public GameObject _ARSessionOrigin, _distanceVisualizerPrefab, _bezierVisualizerPrefab, _shadowPrefab, _cubeText;
     public Slider _distanceSlider;
-    public GameObject _shadowPrefab;
-    ARRaycastManager m_RaycastManager;
-
-    static List<ARRaycastHit> _s_Hits = new List<ARRaycastHit>();
-    public static event Action _onPlacedObject;
 
     [SerializeField]
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
@@ -31,13 +23,17 @@ public class SceneController_Part2 : MonoBehaviour
     }
 
     public GameObject _spawnedObject { get; private set; }
+    public GameObject _bezierCube { get; private set; } // the  cube that is being pulled around 
+    ARRaycastManager m_RaycastManager;
 
+    static List<ARRaycastHit> _s_Hits = new List<ARRaycastHit>();
+    public static event Action _onPlacedObject;
     private Camera _mainCamera;
     private GameObject _distVisInstance, _bezierInstance, _shadow;
     private BezierLineSetting _bezierScript;
     private LineRenderSettings _lineRendererScript;
 
-    public GameObject _bezierCube { get; private set; } // the  ube that is being pulled around 
+    
 
     float _distanceFromCamera = 1.0f;
     Vector3 _cubeVelocity = new Vector3(0.1f, 0.1f, 0.1f);
@@ -62,7 +58,7 @@ public class SceneController_Part2 : MonoBehaviour
 
         _bezierCube = Instantiate(m_cubePrefab, Vector3.zero, Quaternion.identity);
         _shadow = Instantiate(_shadowPrefab);
-
+        _cubeText.GetComponent<Text>().text = "Cubes: 0";
     }
 
     // Update is called once per frame
@@ -72,6 +68,7 @@ public class SceneController_Part2 : MonoBehaviour
         BezierLineUpdate();
         UpdateTextRotation();
         DetectShadow();
+        _cubeText.GetComponent<Text>().text = "Cubes: "+_spawnList.Count;
     }
 
     /* BezierLineUpdate():

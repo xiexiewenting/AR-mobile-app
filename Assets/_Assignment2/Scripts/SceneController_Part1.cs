@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -10,14 +11,8 @@ using UnityEngine.SceneManagement;
 public class SceneController_Part1 : MonoBehaviour
 {
     /* necessary GameObjects */
-    public GameObject _ARSessionOrigin;
-    public GameObject _distanceVisualizerPrefab;
-
-    ARRaycastManager m_RaycastManager;
-
-    static List<ARRaycastHit> _s_Hits = new List<ARRaycastHit>();
-    public static event Action _onPlacedObject;
-
+    public GameObject _ARSessionOrigin, _distanceVisualizerPrefab, _cubeText;
+    
     [SerializeField]
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
     GameObject m_cubePrefab;
@@ -28,7 +23,9 @@ public class SceneController_Part1 : MonoBehaviour
     }
     
     public GameObject _spawnedObject { get; private set; }
-
+    private ARRaycastManager m_RaycastManager;
+    static List<ARRaycastHit> _s_Hits = new List<ARRaycastHit>();
+    public static event Action _onPlacedObject;
     private Camera _mainCamera;
     private GameObject _distVisInstance;
     private LineRenderSettings _lineRendererScript;
@@ -43,13 +40,14 @@ public class SceneController_Part1 : MonoBehaviour
 
         _distVisInstance = Instantiate(_distanceVisualizerPrefab);
         _lineRendererScript = _distVisInstance.GetComponent<LineRenderSettings>();
-
+        _cubeText.GetComponent<Text>().text = "Cubes: 0";
     }
 
     void Update() 
     {
         TouchInteraction();
         UpdateTextRotation();
+        _cubeText.GetComponent<Text>().text = "Cubes: "+_spawnList.Count;
     }
 
     /* TouchInteraction():
@@ -75,7 +73,23 @@ public class SceneController_Part1 : MonoBehaviour
         }
     }
 
-    /* AddCube():
+    /* UpdateTextRotation():
+     * updates all the rotations of the DistText banners according to the current camera angle 
+     */
+    void UpdateTextRotation()
+    {
+        int textTotal = _lineRendererScript._distTextArray.Count;
+        for (int i = 0; i < textTotal; i++)
+        {
+            Transform distTextTransform = _lineRendererScript._distTextArray[i].transform;
+            Quaternion camRot = _mainCamera.transform.rotation;
+
+            distTextTransform.LookAt(distTextTransform.position + camRot * Vector3.forward, camRot * Vector3.up);
+        }
+    }
+
+    /* BUTTON METHOD 
+     * AddCube(): 
      * (1) instantiates a cube and adds it to the list
      * (2) tells DistanceVisualizer to AddCube()
      */
@@ -92,7 +106,8 @@ public class SceneController_Part1 : MonoBehaviour
         }
     }
 
-    /* Undo():
+    /* BUTTON METHOD
+     * Undo():
      * if there are still cubes in the scene 
      * (1) removes the last-created cube from the list and destroys it
      * (2) tells DistanceVisualizer to Undo()
@@ -109,7 +124,8 @@ public class SceneController_Part1 : MonoBehaviour
 
     }
 
-    /* Reset():
+    /* BUTTON METHOD
+     * Reset():
      * (1) removes and destroys all cubes in the scene
      * (2) destroys DistanceVisualizer
      * (3) reinstantiates DistanceVisualizer 
@@ -130,22 +146,11 @@ public class SceneController_Part1 : MonoBehaviour
         _lineRendererScript = _distVisInstance.GetComponent<LineRenderSettings>();
     }
 
-    /* UpdateTextRotation():
-     * updates all the rotations of the DistText banners according to the current camera angle 
+    /* BUTTON METHOD
+     * LoadMainMenu():
+     * loads the main menu scene
      */
-    void UpdateTextRotation()
-    {
-        int textTotal = _lineRendererScript._distTextArray.Count;
-        for (int i = 0; i < textTotal; i++)
-        {
-            Transform distTextTransform = _lineRendererScript._distTextArray[i].transform;
-            Quaternion camRot = _mainCamera.transform.rotation;
-
-            distTextTransform.LookAt(distTextTransform.position + camRot * Vector3.forward, camRot * Vector3.up);
-        }
-    }
-
-      public void LoadMainMenu() {
+    public void LoadMainMenu() {
         SceneManager.LoadScene("LoadScreen");
     }
 

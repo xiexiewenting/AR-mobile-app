@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Serialization;
 using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
@@ -11,30 +12,43 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ARTapToPlaceObject : MonoBehaviour
 {
-    public GameObject _ARSessionOrigin;
+    public GameObject _ARSessionOrigin, _gamePieceTypeText, _instructionsText;
     [SerializeField]
-    [Tooltip("Instantiates this prefab on a plane at the touch location.")]
-    GameObject m_gamePiecePrefab;
+    [Tooltip("Instantiates Mew on a plane at the touch location.")]
+    GameObject m_MewGamePiece;
+    [SerializeField]
+    [Tooltip("Instantiates cereal bowl on a plane at the touch location.")]
+    GameObject m_CerealGamePiece;
 
     /// <summary>
     /// The prefab to instantiate on touch.
     /// </summary>
-    public GameObject gamePiecePrefab
+    public GameObject gamePiecePrefab_mew
     {
-        get { return m_gamePiecePrefab; }
-        set { m_gamePiecePrefab = value; }
+        get { return m_MewGamePiece; }
+        set { m_MewGamePiece = value; }
+    }
+    public GameObject gamePiecePrefab_cereal
+    {
+        get { return m_CerealGamePiece; }
+        set { m_CerealGamePiece = value; }
     }
     public GameObject _gamePiece { get; private set; }
+    GameObject _gpTemplate;
+    string _gpTypeString;
     ARRaycastManager m_RaycastManager;
     Vector3 _destination;
     float _movementSmooth = 1.0f;
     static List<ARRaycastHit> _s_Hits = new List<ARRaycastHit>();
-    //Camera _mainCamera;
+
     // Start is called before the first frame update
     void Start()
     {
-        //_mainCamera = _ARSessionOrigin.GetComponentInChildren <Camera>();
         m_RaycastManager = _ARSessionOrigin.GetComponent<ARRaycastManager>();
+        _gpTemplate = m_CerealGamePiece;
+        _gpTypeString = "Cereal Bowl";
+        _gamePieceTypeText.GetComponent<Text>().text = _gpTypeString;
+        Destroy(_instructionsText, 1.0f);
     }
 
     // Update is called once per frame
@@ -42,6 +56,7 @@ public class ARTapToPlaceObject : MonoBehaviour
     {
         TouchInteraction();
         MoveTowardsTap();
+        _gamePieceTypeText.GetComponent<Text>().text = _gpTypeString;
     }
 
     void TouchInteraction() {
@@ -62,7 +77,7 @@ public class ARTapToPlaceObject : MonoBehaviour
             if (_gamePiece != null) {return; }
 
             Debug.Log("Going to instantiate "+Time.time);
-            _gamePiece = Instantiate(m_gamePiecePrefab, hitPose.position, hitPose.rotation);
+            _gamePiece = Instantiate(_gpTemplate, hitPose.position, hitPose.rotation);
             Debug.Log("Instantiation happened "+Time.time);
 
         }
@@ -73,9 +88,36 @@ public class ARTapToPlaceObject : MonoBehaviour
         if (_gamePiece == null) { Debug.Log("the piece does not exist "+Time.time); return; }
         Transform gpTrans = _gamePiece.transform;
         float step = _movementSmooth * Time.deltaTime;
-        Debug.Log("piece position "+gpTrans.position+" and destination is "+_destination);
+        //Debug.Log("piece position "+gpTrans.position+" and destination is "+_destination);
         gpTrans.LookAt(_destination);
         gpTrans.position = Vector3.MoveTowards(gpTrans.position, _destination, step);
 
+    }
+
+    public void TurnIntoCereal() {
+        Debug.Log("change into cereal");
+        if (_gpTemplate == m_CerealGamePiece) { return; }
+        _gpTemplate = m_CerealGamePiece;
+        if (_gamePiece == null) { return; }
+        _gpTypeString = "cereal bowl";
+        TransformGamePiece();
+    }
+
+    public void TurnIntoMew() {
+        Debug.Log("change into mew");
+        if (_gpTemplate == m_MewGamePiece) { return; }
+        _gpTemplate = m_MewGamePiece;
+        if (_gamePiece == null) { return; }
+        _gpTypeString = "Mew";
+        TransformGamePiece();
+    }   
+
+    void TransformGamePiece() {
+        Vector3 currentPos = _gamePiece.transform.position;
+        Quaternion currentRot = _gamePiece.transform.rotation;
+        Debug.Log("Pre: Current position is "+currentPos+", and current rotation is "+currentRot);
+        Destroy(_gamePiece);
+        Debug.Log("Post: Current position is "+currentPos+", and current rotation is "+currentRot);
+        _gamePiece = Instantiate(_gpTemplate, currentPos, currentRot);
     }
 }

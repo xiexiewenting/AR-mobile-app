@@ -4,18 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneNavigator : MonoBehaviour
-{
+{/* This is the main loading screen!  */
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    void Start(){}
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update(){}
 
     public void LoadPart1() {
         SceneManager.LoadScene("Part1");
