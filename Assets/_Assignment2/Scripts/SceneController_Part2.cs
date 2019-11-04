@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.SceneManagement;
 
 public class SceneController_Part2 : MonoBehaviour
 {
@@ -101,12 +102,10 @@ public class SceneController_Part2 : MonoBehaviour
         if (m_RaycastManager.Raycast(shadowRay, _s_Hits, TrackableType.PlaneWithinPolygon))
         {
             Pose shadowPose = _s_Hits[0].pose;
-            Debug.Log("Shadow should appear - "+Time.time+" and shadow Pose is "+shadowPose);
             _shadow.SetActive(true);
             _shadow.transform.position = shadowPose.position;
             return;
         }
-        Debug.Log("No shadow - "+Time.time);
         _shadow.SetActive(false);
     }
 
@@ -184,5 +183,9 @@ public class SceneController_Part2 : MonoBehaviour
     public void ChangeDistance() {
         _distanceFromCamera = _distanceSlider.value;
         Debug.Log("Distance is changed and now "+_distanceFromCamera);
+    }
+
+    public void LoadMainMenu() {
+        SceneManager.LoadScene("LoadScreen");
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using UnityEngine.SceneManagement;
 
 public class SceneController_Part1 : MonoBehaviour
 {
@@ -142,6 +143,10 @@ public class SceneController_Part1 : MonoBehaviour
 
             distTextTransform.LookAt(distTextTransform.position + camRot * Vector3.forward, camRot * Vector3.up);
         }
+    }
+
+      public void LoadMainMenu() {
+        SceneManager.LoadScene("LoadScreen");
     }
 
 }
