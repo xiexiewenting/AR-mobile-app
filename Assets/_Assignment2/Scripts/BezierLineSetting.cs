@@ -28,8 +28,9 @@ public class BezierLineSetting : MonoBehaviour
     public void BezierLineUpdate(Vector3 startPosition, Vector3 cubeVelocity, Vector3 cubePosition)
     {
 		Vector3 p0 = startPosition;
-        Vector3 midPoint = (cubePosition + startPosition)/2.0f;
-		Vector3 p1 = midPoint + cubeVelocity*_velocityScale;
+        //Vector3 midPoint = (cubePosition + startPosition)/2.0f;
+		//Vector3 p1 = midPoint + cubeVelocity*_velocityScale;
+        Vector3 p1 = CalculateP1(startPosition, cubeVelocity, cubePosition);
 		Vector3 p2 = cubePosition;
 
 		for(int i = 0; i < _vertexCount; i++)
@@ -40,6 +41,16 @@ public class BezierLineSetting : MonoBehaviour
 
 		}
     }
+
+    public Vector3 CalculateP1(Vector3 startPosition, Vector3 cubeVelocity, Vector3 cubePosition){
+        //Vector3 p0 = startPosition;
+        Vector3 midPoint = (cubePosition + startPosition)/2.0f;
+		Vector3 p1 = midPoint + cubeVelocity*_velocityScale;
+		//Vector3 p2 = cubePosition;
+
+        return(p1);
+    }
+
 
     /* TestLineUpdate():
      * draws a straight line, for debugging purposes

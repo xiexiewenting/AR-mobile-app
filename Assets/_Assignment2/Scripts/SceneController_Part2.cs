@@ -37,6 +37,7 @@ public class SceneController_Part2 : MonoBehaviour
 
     float _distanceFromCamera = 1.0f;
     Vector3 _cubeVelocity = new Vector3(0.1f, 0.1f, 0.1f);
+    Vector3 _camVector;
     float _smoothTime = 0.4F;
 
     /* tracking the created cubes */
@@ -45,7 +46,6 @@ public class SceneController_Part2 : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("more tweak shadow");
         _mainCamera = _ARSessionOrigin.GetComponentInChildren<Camera>();
         m_RaycastManager = _ARSessionOrigin.GetComponent<ARRaycastManager>();
 
@@ -54,7 +54,6 @@ public class SceneController_Part2 : MonoBehaviour
 
         _bezierInstance = Instantiate(_bezierVisualizerPrefab);
         _bezierScript = _bezierInstance.GetComponent<BezierLineSetting>();
-
 
         _bezierCube = Instantiate(m_cubePrefab, Vector3.zero, Quaternion.identity);
         _shadow = Instantiate(_shadowPrefab);
@@ -76,13 +75,16 @@ public class SceneController_Part2 : MonoBehaviour
      */
     void BezierLineUpdate()
     {
-        Vector3 camDown = -_mainCamera.transform.up;
-        Vector3 camVector = (_mainCamera.transform.forward - _mainCamera.transform.up)/2.0f;
+        //Vector3 camDown = -_mainCamera.transform.up;
+        _camVector = (_mainCamera.transform.forward - _mainCamera.transform.up)/2.0f;
         Vector3 cubePosition = _bezierCube.transform.position;
-        _bezierScript.BezierLineUpdate(camVector, _cubeVelocity, cubePosition);
-        //_bezierScript.TestLineUpdate(camVector, cubePosition);
+        _bezierScript.BezierLineUpdate(_camVector, _cubeVelocity, cubePosition);
+
     }
 
+    /* BezierCubeUpdate():
+     * updates the cube position in relation to camera
+     */
     void BezierCubeUpdate()
     {
         Vector3 currentPosition = _bezierCube.transform.position;
@@ -92,8 +94,13 @@ public class SceneController_Part2 : MonoBehaviour
   
         _bezierCube.transform.position = Vector3.SmoothDamp(currentPosition, 
             resultingPosition, ref _cubeVelocity, _smoothTime);
+        //_bezierCube.transform.LookAt(_bezierScript.CalculateP1(_camVector, _cubeVelocity, currentPosition));
+        _bezierCube.transform.LookAt(_bezierCube.transform.position);
     }
 
+    /* DetectShadow():
+     * detects whether beziercube is above a plane, if so make shadow appear 
+     */
     void DetectShadow() {
         Ray shadowRay = new Ray(_bezierCube.transform.position, _bezierCube.transform.up * -1.0f);
         if (m_RaycastManager.Raycast(shadowRay, _s_Hits, TrackableType.PlaneWithinPolygon))
@@ -104,6 +111,22 @@ public class SceneController_Part2 : MonoBehaviour
             return;
         }
         _shadow.SetActive(false);
+    }
+
+
+    /* UpdateTextRotation():
+     * updates all the rotations of the DistText banners according to the current camera angle 
+    */
+    void UpdateTextRotation()
+    {
+        int textTotal = _lineRendererScript._distTextArray.Count;
+        for (int i = 0; i < textTotal; i++)
+        {
+            Transform distTextTransform = _lineRendererScript._distTextArray[i].transform;
+            Quaternion camRot = _mainCamera.transform.rotation;
+
+            distTextTransform.LookAt(distTextTransform.position + camRot * Vector3.forward, camRot * Vector3.up);
+        }
     }
 
     public void PlaceCube() // add a cube
@@ -163,20 +186,6 @@ public class SceneController_Part2 : MonoBehaviour
     }
 
 
-    /* UpdateTextRotation():
-     * updates all the rotations of the DistText banners according to the current camera angle 
-    */
-    void UpdateTextRotation()
-    {
-        int textTotal = _lineRendererScript._distTextArray.Count;
-        for (int i = 0; i < textTotal; i++)
-        {
-            Transform distTextTransform = _lineRendererScript._distTextArray[i].transform;
-            Quaternion camRot = _mainCamera.transform.rotation;
-
-            distTextTransform.LookAt(distTextTransform.position + camRot * Vector3.forward, camRot * Vector3.up);
-        }
-    }
     public void ChangeDistance() {
         _distanceFromCamera = _distanceSlider.value;
         Debug.Log("Distance is changed and now "+_distanceFromCamera);

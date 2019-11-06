@@ -152,7 +152,7 @@ RectTransform:
   - {fileID: 1418469029}
   - {fileID: 1403377139}
   m_Father: {fileID: 1317674338}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -234,6 +234,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CubeCountText
       objectReference: {fileID: 0}
+    - target: {fileID: 170706542298237367, guid: 37b84d4eb2e764a3097f2487cf4763ad,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 170706542298237366, guid: 37b84d4eb2e764a3097f2487cf4763ad,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -272,7 +277,7 @@ PrefabInstance:
     - target: {fileID: 170706542298237366, guid: 37b84d4eb2e764a3097f2487cf4763ad,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 170706542298237366, guid: 37b84d4eb2e764a3097f2487cf4763ad,
         type: 3}
@@ -342,7 +347,7 @@ PrefabInstance:
     - target: {fileID: 170706542298237365, guid: 37b84d4eb2e764a3097f2487cf4763ad,
         type: 3}
       propertyPath: m_Text
-      value: 'Cubes: 0'
+      value: 'cubes: 0'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37b84d4eb2e764a3097f2487cf4763ad, type: 3}
@@ -428,7 +433,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0
-  m_Text: Undo
+  m_Text: undo
 --- !u!222 &512411492
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -828,7 +833,7 @@ RectTransform:
   m_Children:
   - {fileID: 2044054429}
   m_Father: {fileID: 1317674338}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -970,12 +975,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 89175331}
+  - {fileID: 508868411}
+  - {fileID: 804316429365826008}
   - {fileID: 1823130085}
   - {fileID: 1247573907}
   - {fileID: 1432084117}
-  - {fileID: 804316429365826008}
-  - {fileID: 508868411}
+  - {fileID: 89175331}
   m_Father: {fileID: 1091708246}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1239,7 +1244,7 @@ RectTransform:
   m_Children:
   - {fileID: 1825251532}
   m_Father: {fileID: 1317674338}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1595,7 +1600,7 @@ RectTransform:
   m_Children:
   - {fileID: 512411490}
   m_Father: {fileID: 1317674338}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1777,7 +1782,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0
-  m_Text: Place
+  m_Text: place
 --- !u!222 &1825251534
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1856,7 +1861,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 0
-  m_Text: Reset
+  m_Text: reset
 --- !u!222 &2044054431
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1947,6 +1952,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1317674338}
     m_Modifications:
+    - target: {fileID: 4317781791037201830, guid: c9fe01922d70a43e88917c22d2c869bc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4317781791037201831, guid: c9fe01922d70a43e88917c22d2c869bc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4317781791037201831, guid: c9fe01922d70a43e88917c22d2c869bc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -250
+      objectReference: {fileID: 0}
+    - target: {fileID: 4317781791037201831, guid: c9fe01922d70a43e88917c22d2c869bc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 4317781791037201828, guid: c9fe01922d70a43e88917c22d2c869bc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1047908456}
+    - target: {fileID: 4317781791037201828, guid: c9fe01922d70a43e88917c22d2c869bc,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadMainMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 804316428376119954, guid: c9fe01922d70a43e88917c22d2c869bc,
         type: 3}
       propertyPath: m_Name
@@ -2067,31 +2102,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1047908456}
-    - target: {fileID: 4317781791037201831, guid: c9fe01922d70a43e88917c22d2c869bc,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4317781791037201831, guid: c9fe01922d70a43e88917c22d2c869bc,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -250
-      objectReference: {fileID: 0}
-    - target: {fileID: 4317781791037201831, guid: c9fe01922d70a43e88917c22d2c869bc,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 250
-      objectReference: {fileID: 0}
-    - target: {fileID: 4317781791037201828, guid: c9fe01922d70a43e88917c22d2c869bc,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1047908456}
-    - target: {fileID: 4317781791037201828, guid: c9fe01922d70a43e88917c22d2c869bc,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadMainMenu
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9fe01922d70a43e88917c22d2c869bc, type: 3}
 --- !u!224 &804316429365826008 stripped

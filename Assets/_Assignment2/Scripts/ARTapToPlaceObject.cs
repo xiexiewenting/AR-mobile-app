@@ -13,12 +13,22 @@ using UnityEngine.XR.ARSubsystems;
 public class ARTapToPlaceObject : MonoBehaviour
 {
     public GameObject _ARSessionOrigin, _gamePieceTypeText, _instructionsText;
+
     [SerializeField]
     [Tooltip("Instantiates Mew on a plane at the touch location.")]
     GameObject m_MewGamePiece;
+
     [SerializeField]
     [Tooltip("Instantiates cereal bowl on a plane at the touch location.")]
     GameObject m_CerealGamePiece;
+
+    [SerializeField]
+    [Tooltip("Instantiates raccoon on a plane at the touch location.")]
+    GameObject m_RaccoonGamePiece;
+
+    [SerializeField]
+    [Tooltip("Instantiates ramen on a plane at the touch location.")]
+    GameObject m_RamenGamePiece;
 
     /// <summary>
     /// The prefab to instantiate on touch.
@@ -32,6 +42,18 @@ public class ARTapToPlaceObject : MonoBehaviour
     {
         get { return m_CerealGamePiece; }
         set { m_CerealGamePiece = value; }
+    }
+
+    public GameObject gamePiecePrefab_raccoon
+    {
+        get { return m_RaccoonGamePiece; }
+        set { m_RaccoonGamePiece = value; }
+    }
+
+        public GameObject gamePiecePrefab_ramen
+    {
+        get { return m_RamenGamePiece; }
+        set { m_RamenGamePiece = value; }
     }
     public GameObject _gamePiece { get; private set; }
     GameObject _gpTemplate;
@@ -48,7 +70,7 @@ public class ARTapToPlaceObject : MonoBehaviour
         _gpTemplate = m_CerealGamePiece;
         _gpTypeString = "Cereal Bowl";
         _gamePieceTypeText.GetComponent<Text>().text = _gpTypeString;
-        Destroy(_instructionsText, 1.0f);
+        Destroy(_instructionsText, 2.0f);
     }
 
     // Update is called once per frame
@@ -98,8 +120,8 @@ public class ARTapToPlaceObject : MonoBehaviour
         Debug.Log("change into cereal");
         if (_gpTemplate == m_CerealGamePiece) { return; }
         _gpTemplate = m_CerealGamePiece;
-        if (_gamePiece == null) { return; }
         _gpTypeString = "cereal bowl";
+        if (_gamePiece == null) { return; }
         TransformGamePiece();
     }
 
@@ -107,10 +129,27 @@ public class ARTapToPlaceObject : MonoBehaviour
         Debug.Log("change into mew");
         if (_gpTemplate == m_MewGamePiece) { return; }
         _gpTemplate = m_MewGamePiece;
-        if (_gamePiece == null) { return; }
         _gpTypeString = "Mew";
+        if (_gamePiece == null) { return; }
         TransformGamePiece();
     }   
+    public void TurnIntoRaccoon() {
+        Debug.Log("change into raccoon");
+        if (_gpTemplate == m_RaccoonGamePiece) { return; }
+        _gpTemplate = m_RaccoonGamePiece;
+        _gpTypeString = "raccoon";
+        if (_gamePiece == null) { return; }
+        TransformGamePiece();
+    } 
+
+    public void TurnIntoRamen() {
+        Debug.Log("change into ramen");
+        if (_gpTemplate == m_RamenGamePiece) { return; }
+        _gpTemplate = m_RamenGamePiece;
+        _gpTypeString = "ramen";
+        if (_gamePiece == null) { return; }
+        TransformGamePiece();
+    } 
 
     void TransformGamePiece() {
         Vector3 currentPos = _gamePiece.transform.position;
